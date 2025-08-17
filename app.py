@@ -17,7 +17,7 @@ def preprocess_image(path):
     processed = thresh
     #processed = cv2.bitwise_not(processed)
     pil_img=Image.fromarray(processed)
-    pil_img = pil_img.resize((pil_img.width*2,pil_img.height*2),Image.ANTIALIAS)
+    pil_img = pil_img.resize((pil_img.width*2,pil_img.height*2),Image.LANCZOS)
     return pil_img
 
 
