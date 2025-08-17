@@ -1,9 +1,24 @@
 import os
+import cv2
+import numpy as np
 from flask import Flask, render_template, request
 from datetime import datetime
 import pytesseract
 from PIL import Image
 import uuid
+
+def preprocess_image(path):
+    img = cv2.imread(path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BG2GRAY)
+    thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                            cv2.THRESH_BINARY_INV,31,2)
+    kernel = np.ones((1,1), np.uint8)
+    processed = cv2.dilate(thresh, kernel, iterations=1)
+
+    processed = cv2.bitwise_not(processed)
+    pil_img=Image.fromarray(processed)
+    return pil_img
+
 
 app = Flask(__name__)
 BUS_NUMBERS = [1, 2, 3, 4]
@@ -17,7 +32,7 @@ def index():
             filename=f"uploads/{uuid.uuid4().hex}.jpg"
             os.makedirs("uploads",exist_ok=True)
             file.save(filename)
-            img = Image.open(filename)
+            img = preprocess_image(filename)
             text = pytesseract.image_to_string(img, config="--psm 6")
             print("OCR Text:", text)  # Debugging
             for num in BUS_NUMBERS:
