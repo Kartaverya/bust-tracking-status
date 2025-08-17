@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bus Arrival Checker</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { margin-top: 30px; }
+        .navbar-brand { font-weight: bold; }
+        .table th, .table td { text-align: center; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">Bus Arrival Tracker</span>
+  </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header bg-info text-white text-center">
+                    <h4>Upload Bus Photo</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <input type="file" name="file" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Check Bus Arrival</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h4>Bus Status</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Bus Number</th>
+                                <th>Status</th>
+                                <th>Arrival Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for num, info in bus_status.items() %}
+                            <tr class="{% if info.arrived %}table-success{% else %}table-danger{% endif %}">
+                                <td>{{ num }}</td>
+                                <td>
+                                    {% if info.arrived %}
+                                        <span class="badge bg-success">Arrived</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Not Arrived</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ info.time if info.arrived else '' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
